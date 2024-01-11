@@ -1,8 +1,8 @@
 import React from 'react';
-import Game from './components/Game/Game';
+import { Game } from './components/Game/Game';
 import styles from './App.module.css';
 
-const App = () => {
+export const App = () => {
 	const currentPlayer = 'X';
 	const isGameEnded = false;
 	const isDraw = false;
@@ -13,5 +13,3 @@ const App = () => {
 		</div>
 	);
 };
-
-export default App;
