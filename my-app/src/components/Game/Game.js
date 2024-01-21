@@ -1,8 +1,5 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
-import { store } from '../../store';
+import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentPlayer, setGameEnded, setDraw, setField } from '../../action';
-import { subscribe } from '../../store';
 import { Information } from './Information';
 import { Field } from './Field';
 import { GameLayout } from './GameLayout';
@@ -19,32 +16,33 @@ const WIN_PATTERNS = [
 	[2, 4, 6],
 ];
 
+const selectField = (state) => state.field;
+const selectCurrentPlayer = (state) => state.currentPlayer;
+const selectIsGameEnded = (state) => state.isGameEnded;
+const selectIsDraw = (state) => state.isDraw;
+
 export const Game = () => {
-	const [localState, setLocalState] = useState(store.getState());
+	const dispatch = useDispatch();
 
-	useEffect(() => {
-		const handleStateChange = () => setLocalState(store.getState());
-		subscribe(handleStateChange);
-
-		return () => subscribe(handleStateChange);
-	}, []);
+	const field = useSelector(selectField);
+	const currentPlayer = useSelector(selectCurrentPlayer);
+	const isGameEnded = useSelector(selectIsGameEnded);
+	const isDraw = useSelector(selectIsDraw);
 
 	const handleCellClick = (index) => {
-		const { field, currentPlayer, isGameEnded } = localState;
-
 		if (!field[index] && !isGameEnded) {
 			const newField = [...field];
 			newField[index] = currentPlayer;
 
-			store.dispatch(setField(newField));
+			dispatch(setField(newField));
 
 			if (checkWinner(newField, currentPlayer)) {
-				store.dispatch(setGameEnded(true));
+				dispatch(setGameEnded(true));
 			} else if (newField.every((cell) => cell !== '')) {
-				store.dispatch(setDraw(true));
-				store.dispatch(setGameEnded(true));
+				dispatch(setDraw(true));
+				dispatch(setGameEnded(true));
 			} else {
-				store.dispatch(setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X'));
+				dispatch(setCurrentPlayer(currentPlayer === 'X' ? 'O' : 'X'));
 			}
 		}
 	};
@@ -57,10 +55,10 @@ export const Game = () => {
 			field: Array(9).fill(''),
 		};
 
-		store.dispatch(setCurrentPlayer(resetState.currentPlayer));
-		store.dispatch(setGameEnded(resetState.isGameEnded));
-		store.dispatch(setDraw(resetState.isDraw));
-		store.dispatch(setField(resetState.field));
+		dispatch(setCurrentPlayer(resetState.currentPlayer));
+		dispatch(setGameEnded(resetState.isGameEnded));
+		dispatch(setDraw(resetState.isDraw));
+		dispatch(setField(resetState.field));
 	};
 
 	const checkWinner = (currentField, player) => {
@@ -69,8 +67,8 @@ export const Game = () => {
 
 	return (
 		<GameLayout>
-			<Information currentPlayer={localState.currentPlayer} isGameEnded={localState.isGameEnded} isDraw={localState.isDraw} />
-			<Field field={localState.field} onCellClick={handleCellClick} />
+			<Information currentPlayer={currentPlayer} isGameEnded={isGameEnded} isDraw={isDraw} />
+			<Field field={field} onCellClick={handleCellClick} />
 			<div className={styles.restartButton}>
 				<button onClick={handleRestart}>Начать заново</button>
 			</div>

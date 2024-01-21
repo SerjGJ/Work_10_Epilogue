@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { FieldLayout } from './FieldLayout';
 import styles from '../../App.module.css';
