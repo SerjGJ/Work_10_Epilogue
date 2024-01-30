@@ -1,10 +1,9 @@
-import { Game } from './components/Game/Game';
-import styles from './App.module.css';
+import { ConnectedGame } from './components/Game/Game';
 
 export const App = () => {
 	return (
-		<div className={styles.App}>
-			<Game />
+		<div className="App">
+			<ConnectedGame />
 		</div>
 	);
 };

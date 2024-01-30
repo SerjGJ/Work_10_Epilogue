@@ -1,30 +1,40 @@
-import { useState, useEffect } from 'react';
+import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { InformationLayout } from './InformationLayout';
-import styles from '../../App.module.css';
 
-export const Information = ({ currentPlayer, isGameEnded, isDraw }) => {
-	const [status, setStatus] = useState('');
+class Information extends Component {
+	render() {
+		const { currentPlayer, isGameEnded, isDraw } = this.props;
+		let status = '';
 
-	useEffect(() => {
 		if (isDraw) {
-			setStatus('Ничья');
+			status = 'Ничья';
 		} else if (isGameEnded) {
-			setStatus(`Победа: ${currentPlayer}`);
+			status = `Победа: ${currentPlayer}`;
 		} else {
-			setStatus(`Ходит: ${currentPlayer}`);
+			status = `Ходит: ${currentPlayer}`;
 		}
-	}, [isDraw, isGameEnded, currentPlayer]);
 
-	return (
-		<InformationLayout>
-			<div className={styles.information}>{status}</div>
-		</InformationLayout>
-	);
-};
+		return (
+			<InformationLayout>
+				<div className="information">{status}</div>
+			</InformationLayout>
+		);
+	}
+}
 
 Information.propTypes = {
 	currentPlayer: PropTypes.string,
 	isGameEnded: PropTypes.bool,
 	isDraw: PropTypes.bool,
 };
+
+const mapStateToProps = (state) => ({
+	currentPlayer: state.currentPlayer,
+	isGameEnded: state.isGameEnded,
+	isDraw: state.isDraw,
+});
+
+const ConnectedInformation = connect(mapStateToProps)(Information);
+export { ConnectedInformation };

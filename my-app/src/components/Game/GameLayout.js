@@ -1,8 +1,12 @@
+import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export const GameLayout = ({ children }) => {
-	return <div className="game-layout">{children}</div>;
-};
+export class GameLayout extends Component {
+	render() {
+		const { children } = this.props;
+		return <div className="game-layout">{children}</div>;
+	}
+}
 
 GameLayout.propTypes = {
 	children: PropTypes.node,
